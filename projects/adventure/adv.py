@@ -23,8 +23,28 @@ player = Player("Name", world.startingRoom)
 
 # Fill this out
 traversalPath = []
+startRoom = [] # starting value for the starting location
+startRoom.append(player.currentRoom.id)
+visited_rooms = set()
 
+while len(visited_rooms) != len(world.rooms):
+    currentRoom = startRoom[-1]
+    visited_rooms.add(currentRoom)
+    cache = []
+    next_room = roomGraph[currentRoom][1]
+    
+    for rooms in next_room.values():
+        if rooms not in visited_rooms:
+            cache.append(rooms)
+    if len(cache) > 0:
+        startRoom.append(cache[0])        #if it is in the cache add to start_room
+    else:
+        startRoom.pop()
 
+    # get the rooms for next_rooms
+    for rooms in next_room.items():
+        if rooms[1] == startRoom[-1]:
+            traversalPath.append(rooms[0])
 
 # TRAVERSAL TEST
 visited_rooms = set()
@@ -43,13 +63,13 @@ else:
 
 
 
-#######
+######
 # UNCOMMENT TO WALK AROUND
-#######
-# player.currentRoom.printRoomDescription(player)
-# while True:
-#     cmds = input("-> ").lower().split(" ")
-#     if cmds[0] in ["n", "s", "e", "w"]:
-#         player.travel(cmds[0], True)
-#     else:
-#         print("I did not understand that command.")
+######
+player.currentRoom.printRoomDescription(player)
+while True:
+    cmds = input("-> ").lower().split(" ")
+    if cmds[0] in ["n", "s", "e", "w"]:
+        player.travel(cmds[0], True)
+    else:
+        print("I did not understand that command.")
